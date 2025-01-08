@@ -78,6 +78,18 @@ function App() {
             </option>
           ))}
         </select>
+    
+        <label>End Year:</label>
+        <select
+          value={endYear || ''}
+          onChange={(e) => setEndYear(Number(e.target.value))}
+          >
+          {validYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>    
       </div>
       <table className="table-auto border-collapse border-gray-400">
         <thead> 
@@ -91,7 +103,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
+          {filteredData.map((item) => (
             <tr key={item.date}>
               <td>{item.date}</td>
               <td>{item.revenue}</td>
