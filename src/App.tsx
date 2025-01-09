@@ -17,8 +17,15 @@ function App() {
   const [validYears, setValidYears] = useState<number[]>([]);
   const [startYear, setStartYear] = useState<number | null>(null);
   const [endYear, setEndYear] = useState<number | null>(null);
-  // Filter data based on the date
   const [filteredData, setFilteredData] = useState<IncomeStatement[]>([]);
+ 
+  const [revenueFilterOptions, setRevenueFilterOptions] = useState<[number, number][]>([]); 
+  const [selectedRevenueRange, setSelectedRevenueRange] = useState<[number, number] | null>(null);
+
+
+
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,11 +54,25 @@ function App() {
           operatingIncome: item.operatingIncome / 1e9,
         }));
 
+        // Calculate dynamic revenue ranges
+        const minRevenue = Math.floor(
+          Math.min(...convertedData.map((item) => item.revenue))
+        );
+        const maxRevenue = Math.ceil(
+          Math.max(...convertedData.map((item) => item.revenue))
+        );
+
+        const revenueOptions: [number, number][] = [];
+        for (let i = minRevenue; i < maxRevenue; i += 10) {
+          revenueOptions.push([i, i + 10]);
+        }
+
         setValidYears(years);
         setStartYear(years[0]);
         setEndYear(years[years.length - 1]);
         setData(convertedData); // Save the data in state
         setFilteredData(convertedData); //Initialize filtered data with all rows
+        setRevenueFilterOptions(revenueOptions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -60,8 +81,11 @@ function App() {
     fetchData();
   }, []);
 
-  // Filtering according to date
+  // Filtering logic
   useEffect(() => {
+    let filtered = data;
+
+    // Filter by year range
     if (startYear != null && endYear != null) {
       setFilteredData(
         data.filter((item) => {
@@ -70,12 +94,24 @@ function App() {
         })
       );
     }
-  }, [data, startYear, endYear]);
+
+    // Filter by revenue range
+    if (selectedRevenueRange) {
+      const [min, max] = selectedRevenueRange;
+      filtered = filtered.filter(
+        (item) => item.revenue >= min && item.revenue <= max
+      );
+    }
+
+    setFilteredData(filtered);
+
+  }, [data, startYear, endYear, selectedRevenueRange]);
 
   return (
     <div>
       <h1>Income Statement Viewer</h1>
-      {/* Dropdowns for filtering */}
+
+      {/* Dropdowns for Filter by Year */}
       <div>
         <label>Start Year:</label>
         <select
@@ -101,6 +137,30 @@ function App() {
           ))}
         </select>
       </div>
+
+      {/* Dropdowns for Filter by Revenue */}
+      <div>
+        <label>Revenue (in billions):</label>
+        <select
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === "all") setSelectedRevenueRange(null);
+            else {
+              const [min, max] = value.split("-").map(Number);
+              setSelectedRevenueRange([min, max]);
+            }
+          }}
+        >
+          <option value="all">All</option>
+          {revenueFilterOptions.map(([min, max]) => (
+            <option key = {`${min}-${max}`} value={`${min}-${max}`}>
+              {min} - {max}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Table to Display Filtered Data */}
       <table className="table-auto border-collapse border-gray-400">
         <thead>
           <tr>
