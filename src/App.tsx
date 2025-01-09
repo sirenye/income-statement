@@ -22,7 +22,8 @@ function App() {
   const [revenueFilterOptions, setRevenueFilterOptions] = useState<[number, number][]>([]); 
   const [selectedRevenueRange, setSelectedRevenueRange] = useState<[number, number] | null>(null);
 
-
+  const [netIncomeFilterOptions, setNetIncomeFilterOptions] = useState<[number, number][]>([]); // Options for Net Income dropdown
+  const [selectedNetIncomeRange, setSelectedNetIncomeRange] = useState<[number, number] | null>(null); // User-selected Net Income range
 
 
 
@@ -67,12 +68,26 @@ function App() {
           revenueOptions.push([i, i + 10]);
         }
 
+        // Calculate dynamic net income ranges
+        const minNetIncome = Math.floor(
+          Math.min(...convertedData.map((item) => item.netIncome))
+        );
+        const maxNetIncome = Math.ceil(
+          Math.max(...convertedData.map((item) => item.netIncome))
+        );
+
+        const netIncomeOptions: [number, number][] = [];
+        for (let i = minNetIncome; i < maxNetIncome; i += 10) {
+          netIncomeOptions.push([i, i + 10]);
+        }
+
         setValidYears(years);
         setStartYear(years[0]);
         setEndYear(years[years.length - 1]);
         setData(convertedData); // Save the data in state
         setFilteredData(convertedData); //Initialize filtered data with all rows
-        setRevenueFilterOptions(revenueOptions);
+        setRevenueFilterOptions(revenueOptions); // Set dynamic revenue ranges
+        setNetIncomeFilterOptions(netIncomeOptions); // Set dynamic net income ranges
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -103,9 +118,17 @@ function App() {
       );
     }
 
+    // Filter by net income range
+    if (selectedNetIncomeRange) {
+      const [min, max] = selectedNetIncomeRange;
+      filtered = filtered.filter(
+        (item) => item.netIncome >= min && item.netIncome <= max
+      );
+    }
+
     setFilteredData(filtered);
 
-  }, [data, startYear, endYear, selectedRevenueRange]);
+  }, [data, startYear, endYear, selectedRevenueRange, selectedNetIncomeRange]);
 
   return (
     <div>
@@ -160,6 +183,28 @@ function App() {
         </select>
       </div>
 
+      {/* Net Income Range Filter */}
+      <div>
+        <label>Net Income (in billions):</label>
+        <select
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === "all") setSelectedNetIncomeRange(null);
+            else {
+              const [min, max] = value.split("-").map(Number);
+              setSelectedNetIncomeRange([min, max]);
+            }
+          }}
+        >
+          <option value="all">All</option>
+          {netIncomeFilterOptions.map(([min, max]) => (
+            <option key={`${min}-${max}`} value={`${min}-${max}`}>
+              {min} - {max}
+            </option>
+          ))}
+        </select>
+      </div>
+      
       {/* Table to Display Filtered Data */}
       <table className="table-auto border-collapse border-gray-400">
         <thead>
