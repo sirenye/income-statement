@@ -25,7 +25,8 @@ function App() {
   const [netIncomeFilterOptions, setNetIncomeFilterOptions] = useState<[number, number][]>([]); // Options for Net Income dropdown
   const [selectedNetIncomeRange, setSelectedNetIncomeRange] = useState<[number, number] | null>(null); // User-selected Net Income range
 
-
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
 
   useEffect(() => {
@@ -102,12 +103,10 @@ function App() {
 
     // Filter by year range
     if (startYear != null && endYear != null) {
-      setFilteredData(
-        data.filter((item) => {
-          const year = parseInt(item.date.split("-")[0]);
-          return year >= startYear && year <= endYear;
-        })
-      );
+      filtered = filtered.filter((item) => {
+        const year = parseInt(item.date.split("-")[0]);
+        return year >= startYear && year <= endYear;
+      });
     }
 
     // Filter by revenue range
@@ -129,6 +128,24 @@ function App() {
     setFilteredData(filtered);
 
   }, [data, startYear, endYear, selectedRevenueRange, selectedNetIncomeRange]);
+
+  // Sorting Logic
+  const handleSort = (field : keyof IncomeStatement) => {
+    // Toggle between ascending and descending
+    const newOrder = sortField === field && sortOrder === "asc" ? "desc" : "asc";
+    setSortField(field);
+    setSortOrder(newOrder);
+
+    // Sort filtered data
+    const sortedData = [...filteredData].sort((a, b) => {
+      if (a[field] < b[field]) return newOrder === "asc" ? -1 : 1;
+      if (a[field] > b[field]) return newOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setFilteredData(sortedData);
+  };
+
 
   return (
     <div>
@@ -204,12 +221,22 @@ function App() {
           ))}
         </select>
       </div>
-      
+
       {/* Table to Display Filtered Data */}
       <table className="table-auto border-collapse border-gray-400">
         <thead>
           <tr>
-            <th>Date</th>
+            <th>
+              <div className="flex items-center">
+                <span>Date</span>
+                <button
+                  onClick={() => handleSort("date")}
+                  className="ml-2 text-sm text-sm p-1 border rounded hover:bg-gray-200"
+                >
+                  Sort
+                </button>
+              </div>
+            </th>
             <th>Revenue</th>
             <th>Net Income</th>
             <th>Gross Profit</th>
