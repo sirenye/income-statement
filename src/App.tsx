@@ -253,9 +253,21 @@ function App() {
                   {sortField === "revenue" ? (sortOrder === "asc" ? "↑" :  "↓") : "↕"}
                 </button>
               </div>
-              
             </th>
-            <th>Net Income</th>
+            <th>
+                <div className="flex items-center">
+                  <span>Net Income</span>
+                  <button
+                    onClick={() => handleSort("netIncome")}
+                    className={`ml-2 text-sm p-1 ${
+                      sortField === "netIncome" ? "font-bold" : ""
+                    }`}
+                    aria-label="Sort by Net Income"
+                  >
+                    {sortField === "netIncome" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
+                  </button>
+                </div>
+            </th>
             <th>Gross Profit</th>
             <th>EPS</th>
             <th>Operating Income</th>
