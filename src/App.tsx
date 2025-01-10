@@ -231,13 +231,30 @@ function App() {
                 <span>Date</span>
                 <button
                   onClick={() => handleSort("date")}
-                  className="ml-2 text-sm text-sm p-1 border rounded hover:bg-gray-200"
+                  className={`ml-2 text-sm p-1 ${
+                    sortField === "date" ? "font-bold" : ""
+                  }`}
+                  aria-label="Sort by Date"
                 >
-                  Sort
+                  {sortField === "date" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
                 </button>
               </div>
             </th>
-            <th>Revenue</th>
+            <th>
+              <div className="flex items-center">
+                <span>Revenue</span>
+                <button
+                  onClick={() => handleSort("revenue")}
+                  className={`ml-2 text-sm p-1 ${
+                    sortField === "revenue" ? "font-bold" : ""
+                  }`}
+                  aria-label="Sort by Revenue"
+                >
+                  {sortField === "revenue" ? (sortOrder === "asc" ? "↑" :  "↓") : "↕"}
+                </button>
+              </div>
+              
+            </th>
             <th>Net Income</th>
             <th>Gross Profit</th>
             <th>EPS</th>
