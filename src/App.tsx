@@ -152,8 +152,90 @@ function App() {
         Income Statement Viewer
       </h1>
 
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      {/* Filters */}
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex gap-4">
+          <div>
+            <label>Start Year:</label>
+            <select
+              value={startYear || ""}
+              onChange={(e) => setStartYear(Number(e.target.value))}
+              className="block w-full p-2 border border-gray-300 rounded"
+            >
+              {validYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label>End Year:</label>
+            <select
+              value={endYear || ""}
+              onChange={(e) => setEndYear(Number(e.target.value))}
+              className="block w-full p-2 border border-gray-300 rounded"
+            >
+              {validYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <div>
+            <label>Revenue Range (in billions):</label>
+            <select
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "all") setSelectedRevenueRange(null);
+                else {
+                  const [min, max] = value.split("-").map(Number);
+                  setSelectedRevenueRange([min, max]);
+                }
+              }}
+              className="block w-full p-2 border border-gray-300 rounded"
+            >
+              <option value="all">All</option>
+              {revenueFilterOptions.map(([min, max]) => (
+                <option key={`${min}-${max}`} value={`${min}-${max}`}>
+                  {min} - {max}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label>Net Income Range (in billions):</label>
+            <select
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "all") setSelectedNetIncomeRange(null);
+                else {
+                  const [min, max] = value.split("-").map(Number);
+                  setSelectedNetIncomeRange([min, max]);
+                }
+              }}
+              className="block w-full p-2 border border-gray-300 rounded"
+            >
+              <option value="all">All</option>
+              {netIncomeFilterOptions.map(([min, max]) => (
+                <option key={`${min}-${max}`} value={`${min}-${max}`}>
+                  {min} - {max}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Table */}
+      <table className="w-full text-sm text-left text-gray-500">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th
               scope="col"
@@ -185,15 +267,9 @@ function App() {
                 {sortField === "netIncome" && (sortOrder === "asc" ? "↑" : "↓")}
               </div>
             </th>
-            <th scope="col" className="px-6 py-3">
-              Gross Profit
-            </th>
-            <th scope="col" className="px-6 py-3">
-              EPS
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Operating Income
-            </th>
+            <th scope="col" className="px-6 py-3">Gross Profit</th>
+            <th scope="col" className="px-6 py-3">EPS</th>
+            <th scope="col" className="px-6 py-3">Operating Income</th>
           </tr>
         </thead>
         <tbody>
@@ -204,7 +280,7 @@ function App() {
             >
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
               >
                 {item.date}
               </th>
