@@ -153,85 +153,90 @@ function App() {
       </h1>
 
       {/* Filters */}
-      <div className="flex flex-col gap-4 mb-6">
-        <div className="flex gap-4">
-          <div>
-            <label>Start Year:</label>
-            <select
-              value={startYear || ""}
-              onChange={(e) => setStartYear(Number(e.target.value))}
-              className="block w-full p-2 border border-gray-300 rounded"
-            >
-              {validYears.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label>End Year:</label>
-            <select
-              value={endYear || ""}
-              onChange={(e) => setEndYear(Number(e.target.value))}
-              className="block w-full p-2 border border-gray-300 rounded"
-            >
-              {validYears.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
+      <div className="flex flex-wrap gap-4 items-center justify-center mb-4">
+        {/* Start Year Filter */}
+        <div>
+          <label className="font-medium text-gray-700">Start Year:</label>
+          <select
+            value={startYear || ""}
+            onChange={(e) => setStartYear(Number(e.target.value))}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
+          >
+            {validYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <div className="flex gap-4">
-          <div>
-            <label>Revenue Range (in billions):</label>
-            <select
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === "all") setSelectedRevenueRange(null);
-                else {
-                  const [min, max] = value.split("-").map(Number);
-                  setSelectedRevenueRange([min, max]);
-                }
-              }}
-              className="block w-full p-2 border border-gray-300 rounded"
-            >
-              <option value="all">All</option>
-              {revenueFilterOptions.map(([min, max]) => (
-                <option key={`${min}-${max}`} value={`${min}-${max}`}>
-                  {min} - {max}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* End Year Filter */}
+        <div>
+          <label className="font-medium text-gray-700">End Year:</label>
+          <select
+            value={endYear || ""}
+            onChange={(e) => setEndYear(Number(e.target.value))}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
+          >
+            {validYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          <div>
-            <label>Net Income Range (in billions):</label>
-            <select
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === "all") setSelectedNetIncomeRange(null);
-                else {
-                  const [min, max] = value.split("-").map(Number);
-                  setSelectedNetIncomeRange([min, max]);
-                }
-              }}
-              className="block w-full p-2 border border-gray-300 rounded"
-            >
-              <option value="all">All</option>
-              {netIncomeFilterOptions.map(([min, max]) => (
-                <option key={`${min}-${max}`} value={`${min}-${max}`}>
-                  {min} - {max}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Revenue Filter */}
+        <div>
+          <label className="font-medium text-gray-700">
+            Revenue Range (in billions):
+          </label>
+          <select
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "all") setSelectedRevenueRange(null);
+              else {
+                const [min, max] = value.split("-").map(Number);
+                setSelectedRevenueRange([min, max]);
+              }
+            }}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
+          >
+            <option value="all">All</option>
+            {revenueFilterOptions.map(([min, max]) => (
+              <option key={`${min}-${max}`} value={`${min}-${max}`}>
+                {min} - {max}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Net Income Filter */}
+        <div>
+          <label className="font-medium text-gray-700">
+            Net Income Range (in billions):
+          </label>
+          <select
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "all") setSelectedNetIncomeRange(null);
+              else {
+                const [min, max] = value.split("-").map(Number);
+                setSelectedNetIncomeRange([min, max]);
+              }
+            }}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
+          >
+            <option value="all">All</option>
+            {netIncomeFilterOptions.map(([min, max]) => (
+              <option key={`${min}-${max}`} value={`${min}-${max}`}>
+                {min} - {max}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
+
 
       {/* Table */}
       <table className="w-full text-sm text-left text-gray-500">
@@ -244,7 +249,7 @@ function App() {
             >
               <div className="flex items-center">
                 Date
-                {sortField === "date" && (sortOrder === "asc" ? "↑" : "↓")}
+                {sortField === "date" ? (sortOrder === "asc" ? "↑" : "↓") : "↕" }
               </div>
             </th>
             <th
@@ -254,7 +259,7 @@ function App() {
             >
               <div className="flex items-center">
                 Revenue
-                {sortField === "revenue" && (sortOrder === "asc" ? "↑" : "↓")}
+                {sortField === "revenue" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
               </div>
             </th>
             <th
@@ -264,7 +269,7 @@ function App() {
             >
               <div className="flex items-center">
                 Net Income
-                {sortField === "netIncome" && (sortOrder === "asc" ? "↑" : "↓")}
+                {sortField === "netIncome" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
               </div>
             </th>
             <th scope="col" className="px-6 py-3">Gross Profit</th>
