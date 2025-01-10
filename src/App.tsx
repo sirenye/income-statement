@@ -148,14 +148,14 @@ function App() {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
+      <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-600 mb-6 pt-6">
         Income Statement Viewer
       </h1>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 items-center justify-center mb-4">
+      <div className="flex flex-wrap gap-4 items-center justify-center mb-4 px-4 sm:px-8">
         {/* Start Year Filter */}
-        <div>
+        <div className="w-full sm:w-auto">
           <label className="font-medium text-gray-700">Start Year:</label>
           <select
             value={startYear || ""}
@@ -171,7 +171,7 @@ function App() {
         </div>
 
         {/* End Year Filter */}
-        <div>
+        <div className="w-full sm:w-auto">
           <label className="font-medium text-gray-700">End Year:</label>
           <select
             value={endYear || ""}
@@ -187,7 +187,7 @@ function App() {
         </div>
 
         {/* Revenue Filter */}
-        <div>
+        <div className="w-full sm:w-auto">
           <label className="font-medium text-gray-700">
             Revenue Range (in billions):
           </label>
@@ -212,7 +212,7 @@ function App() {
         </div>
 
         {/* Net Income Filter */}
-        <div>
+        <div className="w-full sm:w-auto">
           <label className="font-medium text-gray-700">
             Net Income Range (in billions):
           </label>
@@ -239,12 +239,13 @@ function App() {
 
 
       {/* Table */}
-      <table className="w-full text-sm text-left text-gray-500">
+      <div className="overflow-x-auto px-4 sm:px-8">
+      <table className="w-full text-xs sm:text-sm text-left text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th
               scope="col"
-              className="px-6 py-3 cursor-pointer"
+              className="px-4 py-2 sm:px-6 sm:py-3 cursor-pointer"
               onClick={() => handleSort("date")}
             >
               <div className="flex items-center">
@@ -254,7 +255,7 @@ function App() {
             </th>
             <th
               scope="col"
-              className="px-6 py-3 cursor-pointer"
+              className="px-4 py-2 sm:px-6 sm:py-3 cursor-pointer"
               onClick={() => handleSort("revenue")}
             >
               <div className="flex items-center">
@@ -264,7 +265,7 @@ function App() {
             </th>
             <th
               scope="col"
-              className="px-6 py-3 cursor-pointer"
+              className="px-4 py-2 sm:px-6 sm:py-3 cursor-pointer"
               onClick={() => handleSort("netIncome")}
             >
               <div className="flex items-center">
@@ -272,9 +273,9 @@ function App() {
                 {sortField === "netIncome" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
               </div>
             </th>
-            <th scope="col" className="px-6 py-3">Gross Profit</th>
-            <th scope="col" className="px-6 py-3">EPS</th>
-            <th scope="col" className="px-6 py-3">Operating Income</th>
+            <th scope="col" className="px-4 py-2 sm:px-6 sm:py-3">Gross Profit</th>
+            <th scope="col" className="px-4 py-2 sm:px-6 sm:py-3">EPS</th>
+            <th scope="col" className="px-4 py-2 sm:px-6 sm:py-3">Operating Income</th>
           </tr>
         </thead>
         <tbody>
@@ -285,19 +286,20 @@ function App() {
             >
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                className="px-4 py-2 sm:px-6 sm:py-3 font-medium text-gray-900 whitespace-nowrap"
               >
                 {item.date}
               </th>
-              <td className="px-6 py-4">{item.revenue.toFixed(2)}</td>
-              <td className="px-6 py-4">{item.netIncome.toFixed(2)}</td>
-              <td className="px-6 py-4">{item.grossProfit.toFixed(2)}</td>
-              <td className="px-6 py-4">{item.eps.toFixed(2)}</td>
-              <td className="px-6 py-4">{item.operatingIncome.toFixed(2)}</td>
+              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.revenue.toFixed(2)}</td>
+              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.netIncome.toFixed(2)}</td>
+              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.grossProfit.toFixed(2)}</td>
+              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.eps.toFixed(2)}</td>
+              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.operatingIncome.toFixed(2)}</td>
             </tr>
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }
