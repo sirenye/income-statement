@@ -146,142 +146,73 @@ function App() {
     setFilteredData(sortedData);
   };
 
-
   return (
-    <div>
-      <h1>Income Statement Viewer</h1>
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
+        Income Statement Viewer
+      </h1>
 
-      {/* Dropdowns for Filter by Year */}
-      <div>
-        <label>Start Year:</label>
-        <select
-          value={startYear || ""}
-          onChange={(e) => setStartYear(Number(e.target.value))}
-        >
-          {validYears.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-
-        <label>End Year:</label>
-        <select
-          value={endYear || ""}
-          onChange={(e) => setEndYear(Number(e.target.value))}
-        >
-          {validYears.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Dropdowns for Filter by Revenue */}
-      <div>
-        <label>Revenue (in billions):</label>
-        <select
-          onChange={(e) => {
-            const value = e.target.value;
-            if (value === "all") setSelectedRevenueRange(null);
-            else {
-              const [min, max] = value.split("-").map(Number);
-              setSelectedRevenueRange([min, max]);
-            }
-          }}
-        >
-          <option value="all">All</option>
-          {revenueFilterOptions.map(([min, max]) => (
-            <option key = {`${min}-${max}`} value={`${min}-${max}`}>
-              {min} - {max}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Net Income Range Filter */}
-      <div>
-        <label>Net Income (in billions):</label>
-        <select
-          onChange={(e) => {
-            const value = e.target.value;
-            if (value === "all") setSelectedNetIncomeRange(null);
-            else {
-              const [min, max] = value.split("-").map(Number);
-              setSelectedNetIncomeRange([min, max]);
-            }
-          }}
-        >
-          <option value="all">All</option>
-          {netIncomeFilterOptions.map(([min, max]) => (
-            <option key={`${min}-${max}`} value={`${min}-${max}`}>
-              {min} - {max}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Table to Display Filtered Data */}
-      <table className="table-auto border-collapse border-gray-400">
-        <thead>
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th>
+            <th
+              scope="col"
+              className="px-6 py-3 cursor-pointer"
+              onClick={() => handleSort("date")}
+            >
               <div className="flex items-center">
-                <span>Date</span>
-                <button
-                  onClick={() => handleSort("date")}
-                  className={`ml-2 text-sm p-1 ${
-                    sortField === "date" ? "font-bold" : ""
-                  }`}
-                  aria-label="Sort by Date"
-                >
-                  {sortField === "date" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
-                </button>
+                Date
+                {sortField === "date" && (sortOrder === "asc" ? "↑" : "↓")}
               </div>
             </th>
-            <th>
+            <th
+              scope="col"
+              className="px-6 py-3 cursor-pointer"
+              onClick={() => handleSort("revenue")}
+            >
               <div className="flex items-center">
-                <span>Revenue</span>
-                <button
-                  onClick={() => handleSort("revenue")}
-                  className={`ml-2 text-sm p-1 ${
-                    sortField === "revenue" ? "font-bold" : ""
-                  }`}
-                  aria-label="Sort by Revenue"
-                >
-                  {sortField === "revenue" ? (sortOrder === "asc" ? "↑" :  "↓") : "↕"}
-                </button>
+                Revenue
+                {sortField === "revenue" && (sortOrder === "asc" ? "↑" : "↓")}
               </div>
             </th>
-            <th>
-                <div className="flex items-center">
-                  <span>Net Income</span>
-                  <button
-                    onClick={() => handleSort("netIncome")}
-                    className={`ml-2 text-sm p-1 ${
-                      sortField === "netIncome" ? "font-bold" : ""
-                    }`}
-                    aria-label="Sort by Net Income"
-                  >
-                    {sortField === "netIncome" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
-                  </button>
-                </div>
+            <th
+              scope="col"
+              className="px-6 py-3 cursor-pointer"
+              onClick={() => handleSort("netIncome")}
+            >
+              <div className="flex items-center">
+                Net Income
+                {sortField === "netIncome" && (sortOrder === "asc" ? "↑" : "↓")}
+              </div>
             </th>
-            <th>Gross Profit</th>
-            <th>EPS</th>
-            <th>Operating Income</th>
+            <th scope="col" className="px-6 py-3">
+              Gross Profit
+            </th>
+            <th scope="col" className="px-6 py-3">
+              EPS
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Operating Income
+            </th>
           </tr>
         </thead>
         <tbody>
           {filteredData.map((item) => (
-            <tr key={item.date}>
-              <td>{item.date}</td>
-              <td>{item.revenue}</td>
-              <td>{item.netIncome}</td>
-              <td>{item.grossProfit}</td>
-              <td>{item.eps}</td>
-              <td>{item.operatingIncome}</td>
+            <tr
+              key={item.date}
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+            >
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                {item.date}
+              </th>
+              <td className="px-6 py-4">{item.revenue.toFixed(2)}</td>
+              <td className="px-6 py-4">{item.netIncome.toFixed(2)}</td>
+              <td className="px-6 py-4">{item.grossProfit.toFixed(2)}</td>
+              <td className="px-6 py-4">{item.eps.toFixed(2)}</td>
+              <td className="px-6 py-4">{item.operatingIncome.toFixed(2)}</td>
             </tr>
           ))}
         </tbody>
@@ -291,3 +222,4 @@ function App() {
 }
 
 export default App;
+
