@@ -140,10 +140,10 @@ function App() {
         endYear={endYear}
         setStartYear={setStartYear}
         setEndYear={setEndYear}
-        selectedRevenueRange={selectedRevenueRange} // <-- Pass selectedRevenueRange here
-        setSelectedRevenueRange={setSelectedRevenueRange} // <-- Pass setSelectedRevenueRange here
-        selectedNetIncomeRange={selectedNetIncomeRange} // <-- Pass selectedNetIncomeRange here
-        setSelectedNetIncomeRange={setSelectedNetIncomeRange} // <-- Pass setSelectedNetIncomeRange here
+        selectedRevenueRange={selectedRevenueRange}
+        setSelectedRevenueRange={setSelectedRevenueRange}
+        selectedNetIncomeRange={selectedNetIncomeRange} 
+        setSelectedNetIncomeRange={setSelectedNetIncomeRange}
       />
       <Table
         data={filteredData}

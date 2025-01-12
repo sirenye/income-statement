@@ -72,7 +72,7 @@ const Filters: React.FC<FiltersProps> = ({
             onChange={(e) => {
               const min = parseFloat(e.target.value);
               setSelectedRevenueRange([
-                min,
+                isNaN(min) ? 0 : min,
                 selectedRevenueRange ? selectedRevenueRange[1] : Infinity,
               ]);
             }}
@@ -86,7 +86,7 @@ const Filters: React.FC<FiltersProps> = ({
               const max = parseFloat(e.target.value);
               setSelectedRevenueRange([
                 selectedRevenueRange ? selectedRevenueRange[0] : 0,
-                max,
+                isNaN(max) ? Infinity : max,
               ]);
             }}
             className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
@@ -107,7 +107,7 @@ const Filters: React.FC<FiltersProps> = ({
             onChange={(e) => {
               const min = parseFloat(e.target.value);
               setSelectedNetIncomeRange([
-                min,
+                isNaN(min) ? 0 : min,
                 selectedNetIncomeRange ? selectedNetIncomeRange[1] : Infinity,
               ]);
             }}
@@ -121,7 +121,7 @@ const Filters: React.FC<FiltersProps> = ({
               const max = parseFloat(e.target.value);
               setSelectedNetIncomeRange([
                 selectedNetIncomeRange ? selectedNetIncomeRange[0] : 0,
-                max,
+                isNaN(max) ? Infinity : max,
               ]);
             }}
             className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
