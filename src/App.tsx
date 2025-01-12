@@ -132,7 +132,7 @@ function App() {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-600 mb-6 pt-6">
-        Income Statement Viewer
+        Apple Income Statement Viewer
       </h1>
       <Filters
         validYears={validYears}

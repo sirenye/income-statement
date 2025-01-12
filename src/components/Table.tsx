@@ -1,4 +1,6 @@
 import React from "react";
+import { FaSortUp, FaSortDown, FaSort } from 'react-icons/fa'; // Font Awesome icons
+
 
 interface TableProps {
   data: {
@@ -26,7 +28,16 @@ const Table: React.FC<TableProps> = ({ data, sortField, sortOrder, handleSort })
               onClick={() => handleSort("date")}
             >
               <div className="flex items-center">
-                Date {sortField === "date" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
+                Date 
+                {sortField === "date" ? (
+                  sortOrder === "asc" ? (
+                    <FaSortUp className="w-4 h-4 text-blue-500 ml-2"  />
+                  ) : (
+                    <FaSortDown className="w-4 h-4 text-blue-500 ml-2" />
+                  )
+                ) : (
+                    <FaSort className="w-4 h-4 text-blue-500 ml-2" />
+                  )}
               </div>
             </th>
             <th
@@ -35,7 +46,16 @@ const Table: React.FC<TableProps> = ({ data, sortField, sortOrder, handleSort })
               onClick={() => handleSort("revenue")}
             >
               <div className="flex items-center">
-                Revenue {sortField === "revenue" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
+                Revenue 
+                {sortField === "revenue" ? (
+                  sortOrder === "asc" ? (
+                    <FaSortUp className="w-4 h-4 text-blue-500 ml-2"  />
+                  ) : (
+                    <FaSortDown className="w-4 h-4 text-blue-500 ml-2" />
+                  )
+                ) : (
+                    <FaSort className="w-4 h-4 text-blue-500 ml-2" />
+                  )}
               </div>
             </th>
             <th
@@ -44,7 +64,16 @@ const Table: React.FC<TableProps> = ({ data, sortField, sortOrder, handleSort })
               onClick={() => handleSort("netIncome")}
             >
               <div className="flex items-center">
-                Net Income {sortField === "netIncome" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
+                Net Income
+                {sortField === "netIncome" ? (
+                  sortOrder === "asc" ? (
+                    <FaSortUp className="w-4 h-4 text-blue-500 ml-2"  />
+                  ) : (
+                    <FaSortDown className="w-4 h-4 text-blue-500 ml-2" />
+                  )
+                ) : (
+                    <FaSort className="w-4 h-4 text-blue-500 ml-2" />
+                  )}
               </div>
             </th>
             <th scope="col" className="px-4 py-2 sm:px-6 sm:py-3">Gross Profit</th>
