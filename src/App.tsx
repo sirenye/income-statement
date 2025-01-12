@@ -1,5 +1,3 @@
-//import React from 'react';
-//import logo from './logo.svg';
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import Filters from "./components/Filters";
@@ -23,10 +21,8 @@ function App() {
   const [validYears, setValidYears] = useState<number[]>([]);
   const [startYear, setStartYear] = useState<number | null>(null);
   const [endYear, setEndYear] = useState<number | null>(null);
-  const [revenueFilterOptions, setRevenueFilterOptions] = useState<[number, number][]>([]);
-  const [selectedRevenueRange, setSelectedRevenueRange] = useState<[number, number] | null>(null);
-  const [netIncomeFilterOptions, setNetIncomeFilterOptions] = useState<[number, number][]>([]);
-  const [selectedNetIncomeRange, setSelectedNetIncomeRange] = useState<[number, number] | null>(null);
+  const [selectedRevenueRange, setSelectedRevenueRange] = useState<[number, number] | null>([0, Infinity]);
+  const [selectedNetIncomeRange, setSelectedNetIncomeRange] = useState<[number, number] | null>([0, Infinity]);
 
   // Sorting-related state
   const [sortField, setSortField] = useState<string | null>(null);
@@ -81,8 +77,6 @@ function App() {
         setEndYear(years[years.length - 1]);
         setData(convertedData); // Save the data in state
         setFilteredData(convertedData); // Initialize filtered data with all rows
-        setRevenueFilterOptions(revenueOptions); // Set dynamic revenue ranges
-        setNetIncomeFilterOptions(netIncomeOptions); // Set dynamic net income ranges
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -146,10 +140,10 @@ function App() {
         endYear={endYear}
         setStartYear={setStartYear}
         setEndYear={setEndYear}
-        revenueFilterOptions={revenueFilterOptions}
-        setSelectedRevenueRange={setSelectedRevenueRange}
-        netIncomeFilterOptions={netIncomeFilterOptions}
-        setSelectedNetIncomeRange={setSelectedNetIncomeRange}
+        selectedRevenueRange={selectedRevenueRange} // <-- Pass selectedRevenueRange here
+        setSelectedRevenueRange={setSelectedRevenueRange} // <-- Pass setSelectedRevenueRange here
+        selectedNetIncomeRange={selectedNetIncomeRange} // <-- Pass selectedNetIncomeRange here
+        setSelectedNetIncomeRange={setSelectedNetIncomeRange} // <-- Pass setSelectedNetIncomeRange here
       />
       <Table
         data={filteredData}

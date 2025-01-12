@@ -6,9 +6,9 @@ interface FiltersProps {
   endYear: number | null;
   setStartYear: (year: number) => void;
   setEndYear: (year: number) => void;
-  revenueFilterOptions: [number, number][];
+  selectedRevenueRange: [number, number] | null;
   setSelectedRevenueRange: (range: [number, number] | null) => void;
-  netIncomeFilterOptions: [number, number][];
+  selectedNetIncomeRange: [number, number] | null;
   setSelectedNetIncomeRange: (range: [number, number] | null) => void;
 }
 
@@ -18,9 +18,9 @@ const Filters: React.FC<FiltersProps> = ({
   endYear,
   setStartYear,
   setEndYear,
-  revenueFilterOptions,
+  selectedRevenueRange,
   setSelectedRevenueRange,
-  netIncomeFilterOptions,
+  selectedNetIncomeRange,
   setSelectedNetIncomeRange,
 }) => {
   return (
@@ -56,30 +56,42 @@ const Filters: React.FC<FiltersProps> = ({
           ))}
         </select>
       </div>
-
+      
+      
       {/* Revenue Filter */}
       <div className="w-full sm:w-auto">
         <label className="font-medium text-gray-700">
           Revenue Range (in billions):
         </label>
-        <select
-          onChange={(e) => {
-            const value = e.target.value;
-            if (value === "all") setSelectedRevenueRange(null);
-            else {
-              const [min, max] = value.split("-").map(Number);
-              setSelectedRevenueRange([min, max]);
-            }
-          }}
-          className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
-        >
-          <option value="all">All</option>
-          {revenueFilterOptions.map(([min, max]) => (
-            <option key={`${min}-${max}`} value={`${min}-${max}`}>
-              {min} - {max}
-            </option>
-          ))}
-        </select>
+
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            placeholder="Min"
+            value={selectedRevenueRange ? selectedRevenueRange[0] : ""}
+            onChange={(e) => {
+              const min = parseFloat(e.target.value);
+              setSelectedRevenueRange([
+                min,
+                selectedRevenueRange ? selectedRevenueRange[1] : Infinity,
+              ]);
+            }}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="number"
+            placeholder="Max"
+            value={selectedRevenueRange ? selectedRevenueRange[1] : ""}
+            onChange={(e) => {
+              const max = parseFloat(e.target.value);
+              setSelectedRevenueRange([
+                selectedRevenueRange ? selectedRevenueRange[0] : 0,
+                max,
+              ]);
+            }}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
+          />
+        </div>
       </div>
 
       {/* Net Income Filter */}
@@ -87,24 +99,34 @@ const Filters: React.FC<FiltersProps> = ({
         <label className="font-medium text-gray-700">
           Net Income Range (in billions):
         </label>
-        <select
-          onChange={(e) => {
-            const value = e.target.value;
-            if (value === "all") setSelectedNetIncomeRange(null);
-            else {
-              const [min, max] = value.split("-").map(Number);
-              setSelectedNetIncomeRange([min, max]);
-            }
-          }}
-          className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
-        >
-          <option value="all">All</option>
-          {netIncomeFilterOptions.map(([min, max]) => (
-            <option key={`${min}-${max}`} value={`${min}-${max}`}>
-              {min} - {max}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            placeholder="Min"
+            value={selectedNetIncomeRange ? selectedNetIncomeRange[0] : ""}
+            onChange={(e) => {
+              const min = parseFloat(e.target.value);
+              setSelectedNetIncomeRange([
+                min,
+                selectedNetIncomeRange ? selectedNetIncomeRange[1] : Infinity,
+              ]);
+            }}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
+          />
+          <input
+            type="number"
+            placeholder="Max"
+            value={selectedNetIncomeRange ? selectedNetIncomeRange[1] : ""}
+            onChange={(e) => {
+              const max = parseFloat(e.target.value);
+              setSelectedNetIncomeRange([
+                selectedNetIncomeRange ? selectedNetIncomeRange[0] : 0,
+                max,
+              ]);
+            }}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
+          />
+        </div>
       </div>
     </div>
   );
