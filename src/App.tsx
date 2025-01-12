@@ -2,6 +2,8 @@
 //import logo from './logo.svg';
 import "./App.css";
 import React, { useEffect, useState } from "react";
+import Filters from "./components/Filters";
+import Table from "./components/Table";
 
 interface IncomeStatement {
   date: string;
@@ -13,22 +15,24 @@ interface IncomeStatement {
 }
 
 function App() {
+  // Core state for the app
   const [data, setData] = useState<IncomeStatement[]>([]);
+  const [filteredData, setFilteredData] = useState<IncomeStatement[]>([]);
+
+  // Filter-related state
   const [validYears, setValidYears] = useState<number[]>([]);
   const [startYear, setStartYear] = useState<number | null>(null);
   const [endYear, setEndYear] = useState<number | null>(null);
-  const [filteredData, setFilteredData] = useState<IncomeStatement[]>([]);
- 
-  const [revenueFilterOptions, setRevenueFilterOptions] = useState<[number, number][]>([]); 
+  const [revenueFilterOptions, setRevenueFilterOptions] = useState<[number, number][]>([]);
   const [selectedRevenueRange, setSelectedRevenueRange] = useState<[number, number] | null>(null);
+  const [netIncomeFilterOptions, setNetIncomeFilterOptions] = useState<[number, number][]>([]);
+  const [selectedNetIncomeRange, setSelectedNetIncomeRange] = useState<[number, number] | null>(null);
 
-  const [netIncomeFilterOptions, setNetIncomeFilterOptions] = useState<[number, number][]>([]); // Options for Net Income dropdown
-  const [selectedNetIncomeRange, setSelectedNetIncomeRange] = useState<[number, number] | null>(null); // User-selected Net Income range
-
+  // Sorting-related state
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-
+  // Fetch data on initial load
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,10 +41,8 @@ function App() {
         );
         const jsonData = await response.json();
 
-        // Sort Data by date (latest to earliest)
-        const sortedData = [...jsonData].sort((a, b) =>
-          b.date.localeCompare(a.date)
-        );
+        // Sort data by date (latest to earliest)
+        const sortedData = [...jsonData].sort((a, b) => b.date.localeCompare(a.date));
 
         // Extract unique years from the data
         const years = Array.from(
@@ -51,18 +53,14 @@ function App() {
         const convertedData = sortedData.map((item: any) => ({
           ...item,
           revenue: item.revenue / 1e9, // Convert to billions
-          netIncome: item.netIncome / 1e9, 
+          netIncome: item.netIncome / 1e9,
           grossProfit: item.grossProfit / 1e9,
           operatingIncome: item.operatingIncome / 1e9,
         }));
 
         // Calculate dynamic revenue ranges
-        const minRevenue = Math.floor(
-          Math.min(...convertedData.map((item) => item.revenue))
-        );
-        const maxRevenue = Math.ceil(
-          Math.max(...convertedData.map((item) => item.revenue))
-        );
+        const minRevenue = Math.floor(Math.min(...convertedData.map((item) => item.revenue)));
+        const maxRevenue = Math.ceil(Math.max(...convertedData.map((item) => item.revenue)));
 
         const revenueOptions: [number, number][] = [];
         for (let i = minRevenue; i < maxRevenue; i += 10) {
@@ -70,12 +68,8 @@ function App() {
         }
 
         // Calculate dynamic net income ranges
-        const minNetIncome = Math.floor(
-          Math.min(...convertedData.map((item) => item.netIncome))
-        );
-        const maxNetIncome = Math.ceil(
-          Math.max(...convertedData.map((item) => item.netIncome))
-        );
+        const minNetIncome = Math.floor(Math.min(...convertedData.map((item) => item.netIncome)));
+        const maxNetIncome = Math.ceil(Math.max(...convertedData.map((item) => item.netIncome)));
 
         const netIncomeOptions: [number, number][] = [];
         for (let i = minNetIncome; i < maxNetIncome; i += 10) {
@@ -86,7 +80,7 @@ function App() {
         setStartYear(years[0]);
         setEndYear(years[years.length - 1]);
         setData(convertedData); // Save the data in state
-        setFilteredData(convertedData); //Initialize filtered data with all rows
+        setFilteredData(convertedData); // Initialize filtered data with all rows
         setRevenueFilterOptions(revenueOptions); // Set dynamic revenue ranges
         setNetIncomeFilterOptions(netIncomeOptions); // Set dynamic net income ranges
       } catch (error) {
@@ -112,25 +106,20 @@ function App() {
     // Filter by revenue range
     if (selectedRevenueRange) {
       const [min, max] = selectedRevenueRange;
-      filtered = filtered.filter(
-        (item) => item.revenue >= min && item.revenue <= max
-      );
+      filtered = filtered.filter((item) => item.revenue >= min && item.revenue <= max);
     }
 
     // Filter by net income range
     if (selectedNetIncomeRange) {
       const [min, max] = selectedNetIncomeRange;
-      filtered = filtered.filter(
-        (item) => item.netIncome >= min && item.netIncome <= max
-      );
+      filtered = filtered.filter((item) => item.netIncome >= min && item.netIncome <= max);
     }
 
     setFilteredData(filtered);
-
   }, [data, startYear, endYear, selectedRevenueRange, selectedNetIncomeRange]);
 
-  // Sorting Logic
-  const handleSort = (field : keyof IncomeStatement) => {
+  // Sorting logic
+  const handleSort = (field: keyof IncomeStatement) => {
     // Toggle between ascending and descending
     const newOrder = sortField === field && sortOrder === "asc" ? "desc" : "asc";
     setSortField(field);
@@ -151,155 +140,23 @@ function App() {
       <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-600 mb-6 pt-6">
         Income Statement Viewer
       </h1>
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4 items-center justify-center mb-4 px-4 sm:px-8">
-        {/* Start Year Filter */}
-        <div className="w-full sm:w-auto">
-          <label className="font-medium text-gray-700">Start Year:</label>
-          <select
-            value={startYear || ""}
-            onChange={(e) => setStartYear(Number(e.target.value))}
-            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
-          >
-            {validYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* End Year Filter */}
-        <div className="w-full sm:w-auto">
-          <label className="font-medium text-gray-700">End Year:</label>
-          <select
-            value={endYear || ""}
-            onChange={(e) => setEndYear(Number(e.target.value))}
-            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
-          >
-            {validYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Revenue Filter */}
-        <div className="w-full sm:w-auto">
-          <label className="font-medium text-gray-700">
-            Revenue Range (in billions):
-          </label>
-          <select
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === "all") setSelectedRevenueRange(null);
-              else {
-                const [min, max] = value.split("-").map(Number);
-                setSelectedRevenueRange([min, max]);
-              }
-            }}
-            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
-          >
-            <option value="all">All</option>
-            {revenueFilterOptions.map(([min, max]) => (
-              <option key={`${min}-${max}`} value={`${min}-${max}`}>
-                {min} - {max}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Net Income Filter */}
-        <div className="w-full sm:w-auto">
-          <label className="font-medium text-gray-700">
-            Net Income Range (in billions):
-          </label>
-          <select
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === "all") setSelectedNetIncomeRange(null);
-              else {
-                const [min, max] = value.split("-").map(Number);
-                setSelectedNetIncomeRange([min, max]);
-              }
-            }}
-            className="block w-full p-2 mt-1 border border-gray-300 rounded-lg"
-          >
-            <option value="all">All</option>
-            {netIncomeFilterOptions.map(([min, max]) => (
-              <option key={`${min}-${max}`} value={`${min}-${max}`}>
-                {min} - {max}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-
-      {/* Table */}
-      <div className="overflow-x-auto px-4 sm:px-8">
-      <table className="w-full text-xs sm:text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th
-              scope="col"
-              className="px-4 py-2 sm:px-6 sm:py-3 cursor-pointer"
-              onClick={() => handleSort("date")}
-            >
-              <div className="flex items-center">
-                Date
-                {sortField === "date" ? (sortOrder === "asc" ? "↑" : "↓") : "↕" }
-              </div>
-            </th>
-            <th
-              scope="col"
-              className="px-4 py-2 sm:px-6 sm:py-3 cursor-pointer"
-              onClick={() => handleSort("revenue")}
-            >
-              <div className="flex items-center">
-                Revenue
-                {sortField === "revenue" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
-              </div>
-            </th>
-            <th
-              scope="col"
-              className="px-4 py-2 sm:px-6 sm:py-3 cursor-pointer"
-              onClick={() => handleSort("netIncome")}
-            >
-              <div className="flex items-center">
-                Net Income
-                {sortField === "netIncome" ? (sortOrder === "asc" ? "↑" : "↓") : "↕"}
-              </div>
-            </th>
-            <th scope="col" className="px-4 py-2 sm:px-6 sm:py-3">Gross Profit</th>
-            <th scope="col" className="px-4 py-2 sm:px-6 sm:py-3">EPS</th>
-            <th scope="col" className="px-4 py-2 sm:px-6 sm:py-3">Operating Income</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((item) => (
-            <tr
-              key={item.date}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-            >
-              <th
-                scope="row"
-                className="px-4 py-2 sm:px-6 sm:py-3 font-medium text-gray-900 whitespace-nowrap"
-              >
-                {item.date}
-              </th>
-              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.revenue.toFixed(2)}</td>
-              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.netIncome.toFixed(2)}</td>
-              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.grossProfit.toFixed(2)}</td>
-              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.eps.toFixed(2)}</td>
-              <td className="px-4 py-2 sm:px-6 sm:py-3">{item.operatingIncome.toFixed(2)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <Filters
+        validYears={validYears}
+        startYear={startYear}
+        endYear={endYear}
+        setStartYear={setStartYear}
+        setEndYear={setEndYear}
+        revenueFilterOptions={revenueFilterOptions}
+        setSelectedRevenueRange={setSelectedRevenueRange}
+        netIncomeFilterOptions={netIncomeFilterOptions}
+        setSelectedNetIncomeRange={setSelectedNetIncomeRange}
+      />
+      <Table
+        data={filteredData}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        handleSort={handleSort}
+      />
     </div>
   );
 }
