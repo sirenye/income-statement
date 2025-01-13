@@ -117,8 +117,8 @@ function App() {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-600 mb-6 pt-6">
-        Apple Income Statement Viewer
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-blue-600 mb-6 pt-6">
+        Apple Inc. Income Statement Viewer
       </h1>
       {/* Filters Component */}
       <Filters
