@@ -28,7 +28,7 @@ This is a responsive web application for viewing, filtering, and sorting Apple I
 ## Live Demo
 
 
-You can access the live version of the app here: [Live Demo](https://income-statement.vercel.app)
+You can access the live version of the app here: [Live Demo](https://income-statement-five.vercel.app)
 
 
 ---
@@ -52,7 +52,7 @@ Ensure you have the following installed:
 ### **Step 2: Clone the Repository**
 1. Open your terminal and run the following command:
   ```bash
-  git clone https://github.com/<your-username>/income-statement.git
+  git clone https://github.com/sirenye/income-statement.git
   ```
 2. Navigate to the project directory:
   ```bash
@@ -99,53 +99,6 @@ To create an optimized production build of the app:
 ---
 
 
-### **Step 6: Deploy the Project**
-You can deploy this project to any hosting platform. Below are instructions for the most popular ones:
-
-
-#### **Option 1: Vercel**
-1. Install the Vercel CLI globally:
-  ```bash
-  npm install -g vercel
-  ```
-2. Deploy your project:
-  ```bash
-  vercel
-  ```
-3. Follow the prompts and get your deployment URL.
-
-
-#### **Option 2: Netlify**
-1. Build the project:
-  ```bash
-  npm run build
-  ```
-2. Drag and drop the `build/` folder to the [Netlify](https://www.netlify.com/) deployment area.
-
-
-#### **Option 3: GitHub Pages**
-1. Install GitHub Pages package:
-  ```bash
-  npm install gh-pages --save-dev
-  ```
-2. Add the following `homepage` key to your `package.json`:
-  ```json
-  "homepage": "https://<your-username>.github.io/<repository-name>"
-  ```
-3. Add the deployment scripts to the `scripts` section of `package.json`:
-  ```json
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d build"
-  ```
-4. Deploy the app:
-  ```bash
-  npm run deploy
-  ```
-
-
----
-
-
 ## Project Folder Structure
 The project is organized as follows:
 
@@ -153,12 +106,12 @@ The project is organized as follows:
 ```
 src/
 ├── components/
-│   ├── Filters.tsx          # Handles filtering logic and UI
-│   ├── Table.tsx            # Renders the table with data and sorting
-├── App.tsx                  # Main component
-├── App.css                  # Custom styling
-├── index.tsx                # Entry point of the app
-├── index.css                # TailwindCSS base styling
+│   ├── Filters.tsx      # Handles filtering logic and UI
+│   ├── Table.tsx        # Renders the table with data and sorting
+├── App.tsx              # Main component
+├── App.css              # Custom styling
+├── index.tsx            # Entry point of the app
+├── index.css            # TailwindCSS base styling
 ```
 
 
@@ -171,7 +124,7 @@ src/
 - **React**: Frontend framework for building user interfaces.
 - **TypeScript**: Ensures type safety and better developer experience.
 - **TailwindCSS**: Utility-first CSS framework for fast and responsive styling.
-- **Vercel/Netlify/GitHub Pages**: Used for deployment.
+- **Vercel**: Used for deployment.
 
 
 ---
@@ -181,5 +134,5 @@ src/
 
 
 If you have any questions or need further assistance, please reach out at:
-- **Email**: [your-email@example.com]
-- **GitHub**: [https://github.com/your-username](https://github.com/your-username)
+- **Email**: yezhixiang88@gmail.com
+- **GitHub**: https://github.com/sirenye

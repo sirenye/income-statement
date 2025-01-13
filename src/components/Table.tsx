@@ -1,7 +1,7 @@
 import React from "react";
-import { FaSortUp, FaSortDown, FaSort } from 'react-icons/fa'; // Font Awesome icons
+import { FaSortUp, FaSortDown, FaSort } from 'react-icons/fa';
 
-
+// Define the props for the Table component
 interface TableProps {
   data: {
     date: string;

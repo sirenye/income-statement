@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Filters from "./components/Filters";
 import Table from "./components/Table";
 
+// Define the structure of an income statement record
 interface IncomeStatement {
   date: string;
   revenue: number;
@@ -13,7 +14,7 @@ interface IncomeStatement {
 }
 
 function App() {
-  // Core state for the app
+  // State to hold teh fetched data and filtered data
   const [data, setData] = useState<IncomeStatement[]>([]);
   const [filteredData, setFilteredData] = useState<IncomeStatement[]>([]);
 
@@ -54,29 +55,12 @@ function App() {
           operatingIncome: item.operatingIncome / 1e9,
         }));
 
-        // Calculate dynamic revenue ranges
-        const minRevenue = Math.floor(Math.min(...convertedData.map((item) => item.revenue)));
-        const maxRevenue = Math.ceil(Math.max(...convertedData.map((item) => item.revenue)));
-
-        const revenueOptions: [number, number][] = [];
-        for (let i = minRevenue; i < maxRevenue; i += 10) {
-          revenueOptions.push([i, i + 10]);
-        }
-
-        // Calculate dynamic net income ranges
-        const minNetIncome = Math.floor(Math.min(...convertedData.map((item) => item.netIncome)));
-        const maxNetIncome = Math.ceil(Math.max(...convertedData.map((item) => item.netIncome)));
-
-        const netIncomeOptions: [number, number][] = [];
-        for (let i = minNetIncome; i < maxNetIncome; i += 10) {
-          netIncomeOptions.push([i, i + 10]);
-        }
-
+        // Update state with fetched and processed data
         setValidYears(years);
         setStartYear(years[0]);
         setEndYear(years[years.length - 1]);
-        setData(convertedData); // Save the data in state
-        setFilteredData(convertedData); // Initialize filtered data with all rows
+        setData(convertedData); 
+        setFilteredData(convertedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -85,7 +69,7 @@ function App() {
     fetchData();
   }, []);
 
-  // Filtering logic
+  // Filtering logic: Applies Filters to the data whenever filter values change
   useEffect(() => {
     let filtered = data;
 
@@ -109,24 +93,26 @@ function App() {
       filtered = filtered.filter((item) => item.netIncome >= min && item.netIncome <= max);
     }
 
+    // Update the filtered data state
     setFilteredData(filtered);
   }, [data, startYear, endYear, selectedRevenueRange, selectedNetIncomeRange]);
 
-  // Sorting logic
+  // Sorting logic: Sort the filtered data based on the selected field and order
   const handleSort = (field: keyof IncomeStatement) => {
-    // Toggle between ascending and descending
+    // Toggle the sort order between ascending and descending
     const newOrder = sortField === field && sortOrder === "asc" ? "desc" : "asc";
     setSortField(field);
     setSortOrder(newOrder);
 
-    // Sort filtered data
+    // Perform the sorting
     const sortedData = [...filteredData].sort((a, b) => {
       if (a[field] < b[field]) return newOrder === "asc" ? -1 : 1;
       if (a[field] > b[field]) return newOrder === "asc" ? 1 : -1;
       return 0;
     });
 
-    setFilteredData(sortedData);
+    // Update  the filtered data state with sorted data
+    setFilteredData(sortedData); 
   };
 
   return (
@@ -134,6 +120,7 @@ function App() {
       <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-600 mb-6 pt-6">
         Apple Income Statement Viewer
       </h1>
+      {/* Filters Component */}
       <Filters
         validYears={validYears}
         startYear={startYear}
@@ -145,6 +132,7 @@ function App() {
         selectedNetIncomeRange={selectedNetIncomeRange} 
         setSelectedNetIncomeRange={setSelectedNetIncomeRange}
       />
+      {/* Table Component */}
       <Table
         data={filteredData}
         sortField={sortField}

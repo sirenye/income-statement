@@ -1,5 +1,6 @@
 import React from "react";
 
+// Define the props for the Filters component
 interface FiltersProps {
   validYears: number[];
   startYear: number | null;
@@ -12,6 +13,7 @@ interface FiltersProps {
   setSelectedNetIncomeRange: (range: [number, number] | null) => void;
 }
 
+// Filters component definition 
 const Filters: React.FC<FiltersProps> = ({
   validYears,
   startYear,
